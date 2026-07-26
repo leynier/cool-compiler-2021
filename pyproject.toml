@@ -1,0 +1,38 @@
+[project]
+name = "cool-compiler-2021"
+version = "0.1.0"
+description = "Compilador para el lenguaje COOL (Classroom Object-Oriented Language)"
+readme = "readme.md"
+requires-python = ">=3.14"
+
+dependencies = [
+    "ply>=3.11",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-ordering>=0.6",
+    "ruff>=0.16.0",
+    "ty>=0.0.63",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+markers = [
+    "lexer: tests del analizador lexicográfico",
+    "parser: tests del analizador sintáctico",
+    "semantic: tests del analizador semántico",
+    "codegen: tests de generación de código",
+    "error: tests que esperan errores",
+    "ok: tests que esperan éxito",
+]

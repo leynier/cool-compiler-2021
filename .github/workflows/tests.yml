@@ -3,81 +3,31 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
-  lexer:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [lexer, parser, semantic, codegen]
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: |
-          cd src
-          make clean
-          make
-          make test TAG=lexer
-
-  parser:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: |
-          cd src
-          make clean
-          make
-          make test TAG=parser
-
-  semantic:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: |
-          cd src
-          make clean
-          make
-          make test TAG=semantic
-
-  codegen:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
+      - uses: actions/checkout@v7
 
       - name: Install spim
-        run: sudo apt-get install spim
+        if: matrix.tag == 'codegen'
+        run: sudo apt-get update && sudo apt-get install -y spim
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-groups --all-extras
 
       - name: Run tests
         run: |
           cd src
           make clean
           make
-          make test TAG=codegen
+          make test TAG=${{ matrix.tag }}

@@ -163,10 +163,10 @@ La carpeta `tests` contiene todos los casos de prueba que son obligatorios de pa
 
 Estos tests se ejecutan automáticamente cada vez que hace un _pull request_ al repositorio `matcom/cool-compiler-2021`. Solo aquellos proyectos que pasen todas las pruebas con éxito serán evaluados.
 
-Para ejecutar las pruebas localmente, debe tener instalado `Python 3.7`, `pip` y `make` (normalmente viene con Linux). Ejecute:
+Para ejecutar las pruebas localmente, debe tener instalado `uv` y `make` (normalmente viene con Linux). Ejecute:
 
 ```bash
-$ pip install -r requirements.txt
+$ uv sync --all-groups --all-extras
 $ cd src
 $ make test
 ```

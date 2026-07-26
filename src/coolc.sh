@@ -1,11 +1,23 @@
-# Incluya aquí las instrucciones necesarias para ejecutar su compilador
+#!/usr/bin/env bash
+# Lanza el compilador de COOL dentro del entorno gestionado por uv.
 
-INPUT_FILE=$1
-OUTPUT_FILE=${INPUT_FILE:0: -2}mips
+set -e
 
-# Si su compilador no lo hace ya, aquí puede imprimir la información de contacto
-echo "LINEA_CON_NOMBRE_Y_VERSION_DEL_COMPILADOR"        # TODO: Recuerde cambiar estas
-echo "Copyright (c) 2019: Nombre1, Nombre2, Nombre3"    # TODO: líneas a los valores correctos
+INPUT_FILE="$1"
+if [ -z "$INPUT_FILE" ]; then
+    echo "Uso: $0 <archivo.cl>" >&2
+    exit 1
+fi
 
-# Llamar al compilador
-echo "Compiling $INPUT_FILE into $OUTPUT_FILE"
+OUTPUT_FILE="${INPUT_FILE%.cl}.mips"
+
+# Resolver el directorio del proyecto (donde está pyproject.toml).
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+cd "$PROJECT_ROOT"
+
+echo "CoolCompiler 1.0"
+echo "Copyright (c) 2025: Leynier"
+
+uv run python -m src.coolc "$INPUT_FILE" "$OUTPUT_FILE"
